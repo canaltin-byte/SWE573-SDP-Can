@@ -17,7 +17,9 @@ My name is Can Altın. I got graduated from Bogazici University as an Electrical
 ## Github Adresses
 
 Code : https://github.com/canaltin-byte/SWE573-SDP-Can
+
 Wiki : https://github.com/canaltin-byte/SWE573-SDP-Can/wiki
+
 Issues : https://github.com/canaltin-byte/SWE573-SDP-Can/issues
 
 
