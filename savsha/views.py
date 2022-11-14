@@ -2,16 +2,16 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from blog.forms import NewUserForm
+from savsha.forms import NewUserForm
 
 
 def list(request):
-    return render(request, 'blog/list.html')
+    return render(request, 'main/list.html')
 
 
 def test(request):
     form = NewUserForm()
-    return render(request=request, template_name='blog/test.html', context={"form": form})
+    return render(request=request, template_name='main/test.html', context={"form": form})
 
 
 def register_request(request):
