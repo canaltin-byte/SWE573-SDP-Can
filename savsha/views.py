@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from savsha.forms import NewUserForm
-from savsha.models import Category
+from savsha.models import Category, Contents
 
 
 def list(request):
@@ -58,6 +58,20 @@ def home(request):
 
 
 def new_content(request):
+    content = Contents.objects
+    if request.method == 'POST':
+        if request.POST.get('title') and request.POST.get('message') and request.POST.get('address') \
+                and request.POST.get('labels'):
+            c = Contents()
+            c.user_id = request.user.id
+            c.title = request.POST.get('title')
+            c.message = request.POST.get('message')
+            c.address = request.POST.get('address')
+            c.labels = request.POST.get('labels')
+            c.save()
+            return render(request=request, template_name="main/home.html", context={"categories": content})
+    else:
+        return render(request=request, template_name="user_page/new_content.html", context={"categories": content})
     return render(request=request, template_name="user_page/new_content.html")
 
 
