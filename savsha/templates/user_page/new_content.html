@@ -11,21 +11,13 @@
         {% csrf_token %}
         {{ form.as_p }}
         <div style="margin:10px">Title</div>
-        <input style="width: 80%; height:30px;" type="text" name="title"/><br/>
+        <input style="width: 80%; height:30px;" type="text" name="title" placeholder="Enter maximum 150 characters"/><br/>
         <div style="margin:10px">Message</div>
-        <input style="width: 80%; height:30px;" type="text" name="message"/><br/>
+        <input style="width: 80%; height:30px;" type="text" name="message" placeholder="Enter maximum 1000 characters"/><br/>
         <div style="margin:10px">Address</div>
-        <input style="width: 80%; height:30px;" type="text" name="address"/><br/>
+        <input style="width: 80%; height:30px;" type="text" name="address" placeholder="Enter maximum 1000 characters"/><br/>
         <div style="margin:10px">Labels</div>
-        <input style="width: 80%; height:30px;" type="text" name="labels" placeholder="Seperate lapels with comma"/><br/>
-        <div style="margin:10px"></div>
-        <label for="photo" >Choose an image if you want</label>
-        <div style="margin:10px"></div>
-        <input  type="file"  id="photo"  name="photo"  accept="image/*">
-        <div style="margin:10px">
-           Space
-            <input style="margin-left: 10px" type="checkbox" name="space"/><br/>
-        </div>
+        <input style="width: 80%; height:30px;" type="text" name="labels" placeholder="Seperate lapels with comma and Enter maximum 1000 characters"/><br/>
         <div style="margin:10px; color:red"></div>
         <input type="submit" value="Add Content"/>
     </form>

@@ -27,3 +27,10 @@ class Friends(models.Model):
     user_id = models.IntegerField()
     friend_ids = models.CharField(max_length=1000)
 
+
+class Contents(models.Model):
+    user_id = models.IntegerField()
+    title = models.CharField(max_length=150)
+    message = models.CharField(max_length=1000)
+    address = models.CharField(max_length=1000)
+    labels = models.CharField(max_length=1000)
