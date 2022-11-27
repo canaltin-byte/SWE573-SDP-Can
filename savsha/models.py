@@ -16,3 +16,14 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Category(models.Model):
+    user_id = models.IntegerField()
+    category_names = models.CharField(max_length=1000)
+
+
+class Friends(models.Model):
+    user_id = models.IntegerField()
+    friend_ids = models.CharField(max_length=1000)
+

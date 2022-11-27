@@ -1,0 +1,26 @@
+{% extends 'main/base.html' %}
+{% block title %} Sidebar {% endblock %}
+
+{% block content %}
+<div>
+    <header>
+        <H1 align="center">SavSha</font></H1>
+    </header>
+</div>
+<div style="float:left; margin-left:260px">
+{% for category in categories.all %}
+    <br>
+    <p > {{ category.category_names}}</p>
+    <p > {{ category.user_id }}</p>
+    <hr>
+
+    {% endfor %}
+    <form method="POST">
+        {% csrf_token %}
+        {{form.as_p}}
+        User Id: <input type="text" name="user"/><br/>
+        Category Name: <input type="text" name="category"/><br/>
+        <input type="submit" value="Post"/>
+    </form>
+</div>
+{% endblock %}

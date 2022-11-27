@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from savsha.forms import NewUserForm
+from savsha.models import Category
 
 
 def list(request):
@@ -49,9 +50,21 @@ def login_request(request):
 def logout_request(request):
     logout(request)
     messages.info(request, "You have successfully logged out.")
-    return redirect("http://127.0.0.1:8000/list/")
+    return redirect("http://127.0.0.1:8000/")
 
 
 def home(request):
     return render(request=request, template_name="main/home.html")
 
+
+def category(request):
+    categories = Category.objects
+    if request.method == 'POST':
+        if request.POST.get('user') and request.POST.get('category'):
+            c = Category()
+            c.user_id = request.POST.get('user')
+            c.category_names = request.POST.get('category')
+            c.save()
+            return render(request=request, template_name="user_page/category.html", context={"categories": categories})
+    else:
+        return render(request=request, template_name="user_page/category.html", context={"categories": categories})

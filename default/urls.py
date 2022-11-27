@@ -15,7 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
+from django.conf.urls.static import static
+from default import settings
 from savsha import views
 
 urlpatterns = [
@@ -26,4 +27,5 @@ urlpatterns = [
     path("login/", views.login_request, name="login"),
     path("logout/", views.logout_request, name="logout"),
     path("home/", views.home, name="test"),
+    path("category/", views.category, name="category")
 ]
