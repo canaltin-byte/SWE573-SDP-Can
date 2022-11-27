@@ -57,6 +57,10 @@ def home(request):
     return render(request=request, template_name="main/home.html")
 
 
+def new_content(request):
+    return render(request=request, template_name="user_page/new_content.html")
+
+
 def category(request):
     categories = Category.objects
     if request.method == 'POST':
