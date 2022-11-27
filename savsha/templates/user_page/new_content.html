@@ -1,0 +1,34 @@
+{% extends 'main/base.html' %}
+{% block title %} SavSha {% endblock %}
+
+{% block content %}
+<head style="margin-left:260px">
+    <meta charset="UTF-8">
+    <title>New Content</title>
+</head>
+<body style="margin-left:350px; margin-top:80px">
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div style="margin:10px">Title</div>
+        <input style="width: 80%; height:30px;" type="text" name="title"/><br/>
+        <div style="margin:10px">Message</div>
+        <input style="width: 80%; height:30px;" type="text" name="message"/><br/>
+        <div style="margin:10px">Address</div>
+        <input style="width: 80%; height:30px;" type="text" name="address"/><br/>
+        <div style="margin:10px">Labels</div>
+        <input style="width: 80%; height:30px;" type="text" name="labels" placeholder="Seperate lapels with comma"/><br/>
+        <div style="margin:10px"></div>
+        <label for="photo" >Choose an image if you want</label>
+        <div style="margin:10px"></div>
+        <input  type="file"  id="photo"  name="photo"  accept="image/*">
+        <div style="margin:10px">
+           Space
+            <input style="margin-left: 10px" type="checkbox" name="space"/><br/>
+        </div>
+        <div style="margin:10px; color:red"></div>
+        <input type="submit" value="Add Content"/>
+    </form>
+</body>
+</html>
+{% endblock %}
