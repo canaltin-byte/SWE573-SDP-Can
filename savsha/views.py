@@ -54,11 +54,11 @@ def logout_request(request):
 
 
 def home(request):
-    return render(request=request, template_name="main/home.html")
+    contents = Contents.objects
+    return render(request=request, template_name="main/home.html", context={"contents": contents})
 
 
 def new_content(request):
-    content = Contents.objects
     if request.method == 'POST':
         if request.POST.get('title') and request.POST.get('message') and request.POST.get('address') \
                 and request.POST.get('labels'):
@@ -69,10 +69,11 @@ def new_content(request):
             c.address = request.POST.get('address')
             c.labels = request.POST.get('labels')
             c.save()
-            return render(request=request, template_name="main/home.html", context={"categories": content})
+            return render(request=request, template_name="main/home.html")
+        else:
+            return render(request=request, template_name="user_page/new_content.html")
     else:
-        return render(request=request, template_name="user_page/new_content.html", context={"categories": content})
-    return render(request=request, template_name="user_page/new_content.html")
+        return render(request=request, template_name="user_page/new_content.html")
 
 
 def category(request):

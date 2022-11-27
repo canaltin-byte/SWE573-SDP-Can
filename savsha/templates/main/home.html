@@ -1,13 +1,23 @@
 {% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
+<title>{% block title %}SavSha{% endblock %}</title>
+{% block content %}
 <html>
 <body>
 <div style="margin-left:260px">
     <p>Home Page</p>
-     <a href="http://127.0.0.1:8000/logout" > -  LOGOUT    -</a>
-    <a href="http://127.0.0.1:8000/register/" >-   REGISTER     -</a>
-    <a href="http://127.0.0.1:8000/admin/" >-   ADMIN   - </a>
-    <a href="http://127.0.0.1:8000/" > -  EMPTY    -</a>
 </div>
-
+<div style="width: 55%; margin-left:260px">
+{% for content in contents.all %}
+    <br>
+    <p> <a style="color:red">User : </a>{{ content.user_id}}</p>
+    <p > <a style="color:red">Title : </a>{{ content.title }}</p>
+    <p > <a style="color:red">Message : </a>{{ content.message }}</p>
+    <p > <a style="color:red">Address : </a><a href="{{ content.address }}">{{ content.address }}</a></p>
+    <p > <a style="color:red">Labels : </a>{{ content.labels }}</p>
+    <hr>
+    {% endfor %}
+</div>
 </body>
 </html>
+{% endblock %}
