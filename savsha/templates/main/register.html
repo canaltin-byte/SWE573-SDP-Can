@@ -1,7 +1,7 @@
 {% load crispy_forms_tags %}
-
-<div class="container py-5">
-	<h1>Register</h1>
+<title>{% block title %}SavSha{% endblock %}</title>
+<div style="margin-left:40%; margin-top:10%" class="container py-5">
+	<h1>Register SavSha</h1>
 	<form method="POST">
 		{% csrf_token %}
 			{{ form|crispy }}

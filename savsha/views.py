@@ -6,8 +6,8 @@ from savsha.forms import NewUserForm
 from savsha.models import Category, Contents
 
 
-def list(request):
-    return render(request, 'main/list.html')
+def first_page(request):
+    return render(request, 'main/first_page.html')
 
 
 def test(request):
