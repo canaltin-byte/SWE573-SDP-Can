@@ -1,0 +1,19 @@
+{% extends 'main/base.html' %}
+{% block title %} SavSha {% endblock %}
+
+{% block content %}
+<html lang="en">
+<body style="margin-left:350px; margin-top:80px">
+    <p> <a style="color:red">Id : </a>{{ user.id}}</p>
+    <p > <a style="color:red">Username : </a>{{ user.username}}</p>
+    <p > <a style="color:red">E-mail : </a>{{ user.email }}</p>
+    <p > <a style="color:red">Name : </a>{{ user.first_name }}</p>
+    <p > <a style="color:red">Surname : </a>{{ user.last_name }}</p>
+    <form method="POST">
+        {% csrf_token %}
+            {{form.as_p}}
+        <input type="submit" value="Update"/>
+    </form>
+</body>
+</html>
+{% endblock %}
