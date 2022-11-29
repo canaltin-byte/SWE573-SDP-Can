@@ -1,4 +1,5 @@
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
@@ -74,6 +75,10 @@ def new_content(request):
             return render(request=request, template_name="user_page/new_content.html")
     else:
         return render(request=request, template_name="user_page/new_content.html")
+
+
+def my_profile(request):
+    return render(request=request, template_name="user_page/my_profile.html", context={"user": request.user})
 
 
 def category(request):
