@@ -5,7 +5,7 @@ from django.test import Client
 
 class Testing(TestCase):
     def setUp(self):
-        # Setup run before every test method.
+        # Setup run before every test methoduser = User.objects.create(username='testuser').
         pass
 
     def tearDown(self):
@@ -13,7 +13,7 @@ class Testing(TestCase):
         pass
 
     def test_login_will_pass(self):
-        user = User.objects.create(username='testuser')
+
         user.set_password('12345can')
         user.save()
 
