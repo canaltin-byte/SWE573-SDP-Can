@@ -1,10 +1,13 @@
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
+from django.contrib.auth.views import PasswordChangeView
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from savsha.forms import NewUserForm
+from savsha.forms import NewUserForm, EditUserProfileForm, PasswordChangingForm
 from savsha.models import Category, Contents
+from django.urls import reverse_lazy
+from django.views import generic
 
 
 def first_page(request):
@@ -23,7 +26,7 @@ def register_request(request):
             user = form.save()
             login(request, user)
             messages.success(request, "Registration successful.")
-            return redirect("http://127.0.0.1:8000/home/")
+            return redirect(request.build_absolute_uri('/') + "home/")
         messages.error(request, "Unsuccessful registration. Invalid information.")
     form = NewUserForm()
     return render(request=request, template_name="main/register.html", context={"form": form})
@@ -39,7 +42,7 @@ def login_request(request):
             if user is not None:
                 login(request, user)
                 messages.info(request, f"You are now logged in as {username}.")
-                return redirect("http://127.0.0.1:8000/home/")
+                return redirect(request.build_absolute_uri('/') + "home/")
             else:
                 messages.error(request, "Invalid username or password.")
         else:
@@ -51,7 +54,7 @@ def login_request(request):
 def logout_request(request):
     logout(request)
     messages.info(request, "You have successfully logged out.")
-    return redirect("http://127.0.0.1:8000/")
+    return redirect(request.build_absolute_uri('/'))
 
 
 def home(request):
@@ -92,3 +95,21 @@ def category(request):
             return render(request=request, template_name="user_page/category.html", context={"categories": categories})
     else:
         return render(request=request, template_name="user_page/category.html", context={"categories": categories})
+
+
+class PasswordChangeView(PasswordChangeView):
+    form_class = PasswordChangingForm
+    success_url = reverse_lazy('password_success')
+
+
+def password_success(request):
+    return render(request, "user_page/password_change_success.html")
+
+
+class UpdateUserView(generic.UpdateView):
+    form_class = EditUserProfileForm
+    template_name = "user_page/edit_user_profile.html"
+    success_url = reverse_lazy("home")
+
+    def get_object(self):
+        return self.request.user
