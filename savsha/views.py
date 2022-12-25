@@ -58,7 +58,7 @@ def logout_request(request):
 
 
 def home(request):
-    contents = Contents.objects
+    contents = Contents.objects.all().order_by("-id")
     return render(request=request, template_name="main/home.html", context={"contents": contents})
 
 
