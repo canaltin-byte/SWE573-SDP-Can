@@ -9,11 +9,10 @@
     <p > <a style="color:red">E-mail : </a>{{ user.email }}</p>
     <p > <a style="color:red">Name : </a>{{ user.first_name }}</p>
     <p > <a style="color:red">Surname : </a>{{ user.last_name }}</p>
-    <form method="POST">
-        {% csrf_token %}
-            {{form.as_p}}
-        <input type="submit" value="Update"/>
-    </form>
+    <button class="btn btn-primary" onclick="window.location.pathname='edit_profile'">Edit Profile
+    </button>
+    <button class="btn btn-primary" onclick="window.location.pathname='change_password'">Change Password
+    </button>
 </body>
 </html>
 {% endblock %}
