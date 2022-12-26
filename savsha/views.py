@@ -1,16 +1,16 @@
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordChangeView
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from savsha.forms import NewUserForm, EditUserProfileForm, PasswordChangingForm
-from savsha.models import Category, Contents
-from django.urls import reverse_lazy
+from savsha.models import Category, Contents, Friends
+from django.urls import reverse_lazy, reverse
 from django.views import generic
 from django.contrib.auth import get_user_model
 from django.db.models import Q
-
+from django.http import HttpResponseRedirect
 
 def first_page(request):
     return render(request, 'main/first_page.html')
@@ -60,12 +60,32 @@ def logout_request(request):
 
 
 def home(request):
+    my_friends_ids = Friends.objects.all().filter(user_id=request.user.id).values_list('friend_ids', flat=True)
     contents = Contents.objects.all().order_by("-id")
     if request.method == 'POST':
         if request.POST.get('search'):
             searched_text = request.POST.get('search')
-            contents = contents.filter(Q(title__icontains=searched_text) | Q(message__icontains=searched_text))
+            contents = contents.filter(Q(title__icontains=searched_text) | Q(message__icontains=searched_text) | Q(
+                labels__contains=searched_text))
             return render(request=request, template_name="main/home.html", context={"contents": contents})
+        if request.POST.get('methods'):
+            method = request.POST.get('methods')
+            if method == 'all':
+                return render(request=request, template_name="main/home.html", context={"contents": contents})
+            if method == 'saving':
+                savings = contents.filter(Q(user_id=request.user.id))
+                return render(request=request, template_name="main/home.html", context={"contents": savings})
+            if method == 'space':
+                my_friends_ids = Friends.objects.all().filter(user_id=request.user.id).values_list('friend_ids',
+                                                                                                   flat=True)
+                space = contents.filter(Q(user_id=my_friends_ids[0]))
+                for l in range(len(my_friends_ids) - 1):
+                    space = space | contents.filter(Q(user_id=my_friends_ids[l + 1]))
+                return render(request=request, template_name="main/home.html", context={"contents": space})
+        if request.POST.get('content_id'):
+            content_id = request.POST['content_id']
+            content = contents.filter(id=content_id)
+            return render(request=request, template_name="main/content_detail.html", context={"content": content})
     return render(request=request, template_name="main/home.html", context={"contents": contents})
 
 
@@ -75,6 +95,8 @@ def new_content(request):
                 and request.POST.get('labels'):
             c = Contents()
             c.user_id = request.user.id
+            c.first_name = request.user.first_name
+            c.last_name = request.user.last_name
             c.title = request.POST.get('title')
             c.message = request.POST.get('message')
             c.address = request.POST.get('address')
@@ -82,6 +104,7 @@ def new_content(request):
             c.save()
             return render(request=request, template_name="main/home.html")
         else:
+            messages.success(request, 'Please fill all areas!')
             return render(request=request, template_name="user_page/new_content.html")
     else:
         return render(request=request, template_name="user_page/new_content.html")
@@ -125,4 +148,43 @@ class UpdateUserView(generic.UpdateView):
 def connections(request):
     User = get_user_model()
     all_users = User.objects.all()
-    return render(request=request, template_name="user_page/connections.html", context={"all_users": all_users})
+    user_ids = all_users.values_list('id', flat=True)
+    my_friends_ids = Friends.objects.all().filter(user_id=request.user.id).values_list('friend_ids', flat=True)
+    friend_list = all_users.filter(id=0)
+    if my_friends_ids:
+        friend_list = all_users.filter(Q(id=my_friends_ids[0]))
+        for l in range(len(my_friends_ids)-1):
+            friend_list = friend_list | all_users.filter(Q(id=my_friends_ids[l+1]))
+    if request.method == 'POST':
+        if request.POST.get('search_user'):
+            searched_user = request.POST.get('search_user')
+            if searched_user != 'all':
+                all_users = all_users.filter(Q(first_name__icontains=searched_user) | Q(last_name__icontains=searched_user))
+            return render(request=request, template_name="user_page/connections.html", context={"all_users": all_users})
+        elif request.POST.get('add'):
+            for user_id in user_ids:
+                if str(user_id) == request.POST.get('add') and str(request.user.id) != request.POST.get('add'):
+                    add_friend_fail = True
+                    f = Friends()
+                    f.user_id = request.user.id
+                    f.friend_ids = request.POST.get('add')
+                    f.save()
+                    contents = Contents.objects.all().order_by("-id")
+                    return render(request=request, template_name="main/home.html", context={"contents": contents})
+        elif request.POST.get('remove'):
+            user_id = request.user.id
+            f_id = request.POST.get('remove')
+            member = Friends.objects.all().filter(Q(user_id=user_id) & Q(friend_ids=f_id))
+            member.delete()
+    return render(request=request, template_name="user_page/connections.html", context={"all_users": friend_list})
+
+
+def like_view(request, pk):
+    content = get_object_or_404(Contents, request.POST.get('content_id'))
+    content.likes.add(request.user)
+    return HttpResponseRedirect(reverse('content_detail', args=[str(pk)]))
+
+
+def content_view(request):
+    content = get_object_or_404(Contents, request.POST.get('content_id'))
+    return render(request=request, template_name="main/content_detail.html", context={"content": content})

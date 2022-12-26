@@ -9,18 +9,34 @@
     <form method="POST">
         {% csrf_token %}
             {{form}}
-        <input type="text" id="search" name="search" placeholder="Search...">
+        <input type="text" id="search" name="search" placeholder="Search all">
         <button style="margin:10px" class="btn btn-primary" type="submit">Search</button>
+    </form>
+    <form method="POST">
+        {% csrf_token %}
+            {{form}}
+        <label for="methods">Change your Home Page:</label>
+            <select id="methods" name="methods">
+              <option value="">Select a page</option>
+              <option value="all">All Sharings</option>
+              <option value="space">My Space</option>
+              <option value="saving">My Savings</option>
+            </select>
+        <button style="margin:10px" class="btn btn-primary" type="submit">Refresh Page</button>
     </form>
 </div>
 <div style="width: 55%; margin-left:260px">
 {% for content in contents.all %}
     <br>
-    <p> <a style="color:red">User : </a>{{ content.user_id}}</p>
+    <p> <a style="color:red">User : </a>{{ content.first_name}} {{ content.last_name}}</p>
     <p > <a style="color:red">Title : </a>{{ content.title }}</p>
     <p > <a style="color:red">Message : </a>{{ content.message }}</p>
     <p > <a style="color:red">Address : </a><a href="{{ content.address }}">{{ content.address }}</a></p>
     <p > <a style="color:red">Labels : </a>{{ content.labels }}</p>
+    <form method="POST">
+        {% csrf_token %}
+            <button type="submit" name="content_id" value="{{content.id}}" class="btn btn-primary btn-sm">Extend</button>
+    </form>
     <hr>
     {% endfor %}
 </div>

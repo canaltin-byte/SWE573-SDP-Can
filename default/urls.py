@@ -34,4 +34,6 @@ urlpatterns = [
     path("password_success/", views.password_success, name="password_success"),
     path("edit_profile/", views.UpdateUserView.as_view(), name="edit_user"),
     path("connections/", views.connections, name="connections"),
+    path("like/<int:pk>", views.like_view, name="content_like"),
+    path("content/<int:pk>", views.content_view, name="content_id"),
 ]

@@ -1,0 +1,25 @@
+{% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
+<title>{% block title %}SavSha{% endblock %}</title>
+{% block content %}
+<html>
+<body>
+<div style="width: 55%; margin-left:260px">
+    <h2>Content Special</h2>
+</div>
+<div style="width: 55%; margin-left:260px">
+    <p> <a style="color:red">User : </a>{{ content.first_name}} {{ content.last_name}}</p>
+    <p > <a style="color:red">Title : </a>{{ content.title }}</p>
+    <p > <a style="color:red">Message : </a>{{ content.message }}</p>
+    <p > <a style="color:red">Address : </a><a href="{{ content.address }}">{{ content.address }}</a></p>
+    <p > <a style="color:red">Labels : </a>{{ content.labels }}</p>
+    <form action="{url 'like_content' contents.pk}" method="POST">
+        {% csrf_token %}
+            <button type="submit" name="content_like" value="{{content.id}}" class="btn btn-primary btn-sm">Like</button>
+    </form>
+    <br/><br/>
+    <a href="{% url 'home' %}" class="btn btn-secondary">Back</a>
+</div>
+</body>
+</html>
+{% endblock %}
