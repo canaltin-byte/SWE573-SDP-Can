@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 
@@ -30,7 +31,10 @@ class Friends(models.Model):
 
 class Contents(models.Model):
     user_id = models.IntegerField()
+    first_name = models.CharField(max_length=1000, default='previous ')
+    last_name = models.CharField(max_length=1000, default='content')
     title = models.CharField(max_length=150)
     message = models.CharField(max_length=1000)
     address = models.CharField(max_length=1000)
     labels = models.CharField(max_length=1000)
+    likes = models.ManyToManyField(User, related_name="contents")
