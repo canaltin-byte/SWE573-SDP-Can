@@ -8,6 +8,8 @@ from savsha.forms import NewUserForm, EditUserProfileForm, PasswordChangingForm
 from savsha.models import Category, Contents
 from django.urls import reverse_lazy
 from django.views import generic
+from django.contrib.auth import get_user_model
+from django.db.models import Q
 
 
 def first_page(request):
@@ -59,6 +61,11 @@ def logout_request(request):
 
 def home(request):
     contents = Contents.objects.all().order_by("-id")
+    if request.method == 'POST':
+        if request.POST.get('search'):
+            searched_text = request.POST.get('search')
+            contents = contents.filter(Q(title__icontains=searched_text) | Q(message__icontains=searched_text))
+            return render(request=request, template_name="main/home.html", context={"contents": contents})
     return render(request=request, template_name="main/home.html", context={"contents": contents})
 
 
@@ -113,3 +120,9 @@ class UpdateUserView(generic.UpdateView):
 
     def get_object(self):
         return self.request.user
+
+
+def connections(request):
+    User = get_user_model()
+    all_users = User.objects.all()
+    return render(request=request, template_name="user_page/connections.html", context={"all_users": all_users})
