@@ -4,8 +4,14 @@
 {% block content %}
 <html>
 <body>
-<div style="margin-left:260px">
-    <p>Home Page</p>
+<div style="width: 55%; margin-left:260px">
+    <h2>Home Page</h2>
+    <form method="POST">
+        {% csrf_token %}
+            {{form}}
+        <input type="text" id="search" name="search" placeholder="Search...">
+        <button style="margin:10px" class="btn btn-primary" type="submit">Search</button>
+    </form>
 </div>
 <div style="width: 55%; margin-left:260px">
 {% for content in contents.all %}

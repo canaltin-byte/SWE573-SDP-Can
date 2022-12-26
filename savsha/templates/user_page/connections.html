@@ -1,0 +1,24 @@
+{% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
+<title>{% block title %}SavSha{% endblock %}</title>
+{% block content %}
+<html>
+<body>
+<div style="margin-left:260px">
+    <h2>Connections</h2>
+</div>
+<form id="form">
+  <input type="search" id="query" name="q" placeholder="Search...">
+  <button>Search</button>
+</form>
+<div style="width: 55%; margin-left:260px">
+{% for user in all_users.all %}
+    <br>
+    <p> <a style="color:red">User : </a>{{ user.id}}</p>
+    <p > <a style="color:red">Name : </a>{{ user.first_name }}</p>
+    <p > <a style="color:red">Surname : </a>{{ user.last_name }}</p>
+    {% endfor %}
+</div>
+</body>
+</html>
+{% endblock %}

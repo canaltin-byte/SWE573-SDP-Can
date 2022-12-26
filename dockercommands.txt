@@ -1,12 +1,19 @@
-docker build --tag python-django .
-docker run --publish 8000:8000 python-django
+docker build --tag savsha .
+docker run --publish 8000:8000 savsha
 
 
 docker-compose build
-docker-compose run --rm app django-admin startproject default .
+
+
+docker-compose run --rm savsha django-admin startproject core .
 docker-compose up
 docker exec -it savsha_container /bin/bash
 
 aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 399399769091.dkr.ecr.eu-central-1.amazonaws.com
 docker tag savsha:latest 399399769091.dkr.ecr.eu-central-1.amazonaws.com/savsha:latest
 docker push 399399769091.dkr.ecr.eu-central-1.amazonaws.com/savsha:latest
+
+docker-compose run savsha django-admin startproject core .
+docker exec -it postgres psql -U postgres
+
+docker-compose up / down
