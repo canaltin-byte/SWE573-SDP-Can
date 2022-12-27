@@ -38,3 +38,16 @@ class Contents(models.Model):
     address = models.CharField(max_length=1000)
     labels = models.CharField(max_length=1000)
     likes = models.ManyToManyField(User, related_name="contents")
+
+
+class Likes(models.Model):
+    content_id = models.CharField(max_length=1000)
+    user_id = models.IntegerField()
+
+
+class Comments(models.Model):
+    content_id = models.CharField(max_length=1000)
+    user_id = models.IntegerField()
+    first_name = models.CharField(max_length=1000, default='name')
+    last_name = models.CharField(max_length=1000, default='surname')
+    comment = models.CharField(max_length=1000)

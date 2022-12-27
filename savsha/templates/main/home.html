@@ -35,7 +35,7 @@
     <p > <a style="color:red">Labels : </a>{{ content.labels }}</p>
     <form method="POST">
         {% csrf_token %}
-            <button type="submit" name="content_id" value="{{content.id}}" class="btn btn-primary btn-sm">Extend</button>
+            <button type="submit" name="extend" value="{{content.id}}" class="btn btn-primary btn-sm">Extend</button>
     </form>
     <hr>
     {% endfor %}
