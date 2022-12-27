@@ -19,11 +19,6 @@ class Post(models.Model):
         return self.title
 
 
-class Category(models.Model):
-    user_id = models.IntegerField()
-    category_names = models.CharField(max_length=1000)
-
-
 class Friends(models.Model):
     user_id = models.IntegerField()
     friend_ids = models.CharField(max_length=1000)
@@ -37,7 +32,6 @@ class Contents(models.Model):
     message = models.CharField(max_length=1000)
     address = models.CharField(max_length=1000)
     labels = models.CharField(max_length=1000)
-    likes = models.ManyToManyField(User, related_name="contents")
 
 
 class Likes(models.Model):
@@ -51,3 +45,9 @@ class Comments(models.Model):
     first_name = models.CharField(max_length=1000, default='name')
     last_name = models.CharField(max_length=1000, default='surname')
     comment = models.CharField(max_length=1000)
+
+
+class ExtendedUser(models.Model):
+    user_id = models.IntegerField()
+    picture = models.ImageField(upload_to='images', null=True)
+    summary = models.CharField(max_length=1000)
