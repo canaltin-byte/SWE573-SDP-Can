@@ -32,6 +32,7 @@
     <p > <a style="color:red">Title : </a>{{ content.title }}</p>
     <p > <a style="color:red">Message : </a>{{ content.message }}</p>
     <p > <a style="color:red">Address : </a><a href="{{ content.address }}">{{ content.address }}</a></p>
+    <p > <a style="color:red">Origin : </a>{{ content.origin }}</p>
     <p > <a style="color:red">Labels : </a>{{ content.labels }}</p>
     <form method="POST">
         {% csrf_token %}
