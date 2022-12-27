@@ -80,7 +80,7 @@ def home(request):
                     space = space | contents.filter(Q(user_id=my_friends_ids[l + 1]))
                 return render(request=request, template_name="main/home.html", context={"contents": space})
         if request.POST.get('extend'):
-            content_id = request.POST['extend']
+            content_id = request.POST.get('extend')
             likes = Likes.objects.all().filter(content_id=content_id)
             comments = Comments.objects.all().filter(content_id=content_id)
             content = contents.filter(id=content_id)
@@ -132,7 +132,10 @@ def new_content(request):
             c.labels = request.POST.get('labels')
             c.origin = request.POST.get('origin')
             if request.POST.get('privacy'):
-                c.private = True
+                if request.POST.get('privacy') == 'public':
+                    c.private = False
+                else:
+                    c.private = True
             c.save()
             return render(request=request, template_name="main/home.html")
         else:
@@ -184,16 +187,23 @@ def connections(request):
     user_ids = all_users.values_list('id', flat=True)
     my_friends_ids = Friends.objects.all().filter(user_id=request.user.id).values_list('friend_ids', flat=True)
     friend_list = all_users.filter(id=0)
+    is_friend = False
     if my_friends_ids:
-        friend_list = all_users.filter(Q(id=my_friends_ids[0]))
-        for l in range(len(my_friends_ids)-1):
-            friend_list = friend_list | all_users.filter(Q(id=my_friends_ids[l+1]))
+        for f_id in my_friends_ids:
+            friend_list = friend_list | all_users.filter(Q(id=f_id))
     if request.method == 'POST':
         if request.POST.get('search_user'):
+            is_friend = True
             searched_user = request.POST.get('search_user')
             if searched_user != 'all':
-                all_users = all_users.filter(Q(first_name__icontains=searched_user) | Q(last_name__icontains=searched_user))
-            return render(request=request, template_name="user_page/connections.html", context={"all_users": all_users})
+                if my_friends_ids:
+                    for f_id in my_friends_ids:
+                        all_users = all_users.filter(Q(first_name__icontains=searched_user) | Q(last_name__icontains=searched_user)).exclude(Q(id=f_id))
+            else:
+                if my_friends_ids:
+                    for f_id in my_friends_ids:
+                        all_users = all_users.exclude(Q(id=f_id))
+            return render(request=request, template_name="user_page/connections.html", context={"all_users": all_users, "is_friend": is_friend})
         elif request.POST.get('add'):
             for user_id in user_ids:
                 if str(user_id) == request.POST.get('add') and str(request.user.id) != request.POST.get('add'):
@@ -209,4 +219,4 @@ def connections(request):
             f_id = request.POST.get('remove')
             member = Friends.objects.all().filter(Q(user_id=user_id) & Q(friend_ids=f_id))
             member.delete()
-    return render(request=request, template_name="user_page/connections.html", context={"all_users": friend_list})
+    return render(request=request, template_name="user_page/connections.html", context={"all_users": friend_list, "is_friend": is_friend})

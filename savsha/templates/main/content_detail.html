@@ -5,9 +5,6 @@
 <html>
 <body>
 <div style="width: 55%; margin-left:260px">
-    <h2>Content Special</h2>
-</div>
-<div style="width: 55%; margin-left:260px">
     {% for content in contents.all %}
     <p> <a style="color:red">User : </a>{{ content.first_name}} {{ content.last_name}}</p>
     <p > <a style="color:red">Title : </a>{{ content.title }}</p>
