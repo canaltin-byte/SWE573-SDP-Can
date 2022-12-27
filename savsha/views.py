@@ -54,7 +54,6 @@ def login_request(request):
 
 def logout_request(request):
     logout(request)
-    messages.info(request, "You have successfully logged out.")
     return redirect(request.build_absolute_uri('/'))
 
 
@@ -114,9 +113,14 @@ def new_content(request):
         if request.POST.get('title') and request.POST.get('message') and request.POST.get('address') \
                 and request.POST.get('labels'):
             c = Contents()
-            c.user_id = request.user.id
-            c.first_name = request.user.first_name
-            c.last_name = request.user.last_name
+            if not request.user.id:
+                c.user_id = request.POST.get('user_id')
+                c.first_name = request.POST.get('first_name')
+                c.last_name = request.POST.get('last_name')
+            else:
+                c.user_id = request.user.id
+                c.first_name = request.user.first_name
+                c.last_name = request.user.last_name
             c.title = request.POST.get('title')
             c.message = request.POST.get('message')
             c.address = request.POST.get('address')
