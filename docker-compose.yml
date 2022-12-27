@@ -10,7 +10,7 @@ services:
     depends_on:
       - localhost
     ports:
-      - "8080:8000"
+      - "80:8000"
 
   localhost:
     image: postgres:13.6
