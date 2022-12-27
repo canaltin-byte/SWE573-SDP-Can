@@ -13,13 +13,6 @@
         <input type="text" id="search_user" name="search_user" placeholder="Search...">
         <button style="margin:10px" class="btn btn-primary" type="submit">Search User</button>
     </form>
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-        <li {% if message.tags %} class="{{ message.tags }}"{% endif %} >{{ message }}</li>
-    {% endfor %}
-    </ul>
-    {% endif %}
 </div>
 <div style="width: 55%; margin-left:260px">
 {% for users in all_users.all %}
@@ -30,8 +23,13 @@
     <p> <a style="color:red">Email : </a>{{ users.email }}</p>
     <form method="POST">
         {% csrf_token %}
+            {% if is_friend %}
             <button type="submit" name="add" value="{{users.id}}" class="btn btn-primary btn-sm">Add Friend</button>
+            {% else %}
             <button type="submit" name="remove" value="{{users.id}}" class="btn btn-primary btn-sm">Remove Friend</button>
+            {% endif %}
+
+
     </form>
     <hr>
 {% endfor %}
