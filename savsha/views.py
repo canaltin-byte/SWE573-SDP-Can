@@ -1,17 +1,14 @@
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordChangeView
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from savsha.forms import NewUserForm, EditUserProfileForm, PasswordChangingForm
-from savsha.models import Category, Contents, Friends, Likes, Comments, ExtendedUser
-from django.urls import reverse_lazy, reverse
+from savsha.models import Contents, Friends, Likes, Comments, ExtendedUser
+from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth import get_user_model
 from django.db.models import Q
-from django.http import HttpResponseRedirect
-from django.core.mail import send_mail
 
 
 def first_page(request):
