@@ -28,7 +28,7 @@ urlpatterns = [
     path("home/", views.home, name="home"),
     path("new_content/", views.new_content, name="new_content"),
     path("my_profile/", views.my_profile, name="my_profile"),
-    path("change_password/", views.PasswordChangeView.as_view(template_name="user_page/password_change.html"), name="change_password"),
+    path("password/", views.PasswordChangeView.as_view(template_name="user_page/password_change.html"), name="change_password"),
     path("password_success/", views.password_success, name="password_success"),
     path("edit_profile/", views.UpdateUserView.as_view(), name="edit_user"),
     path("connections/", views.connections, name="connections"),

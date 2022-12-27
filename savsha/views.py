@@ -94,8 +94,11 @@ def home(request):
                 l.save()
             content = contents.filter(id=request.POST['content_like'])
             likes = Likes.objects.all().filter(content_id=request.POST['content_like'])
-            return render(request=request, template_name="main/content_detail.html", context={"contents": content, "likes": likes})
+            comments = Comments.objects.all().filter(content_id=request.POST['content_like'])
+            return render(request=request, template_name="main/content_detail.html", context={"contents": content, "likes": likes, "comments": comments})
         if request.POST.get('new_comment'):
+            content = contents.filter(id=request.POST['content_idc'])
+            likes = Likes.objects.all().filter(content_id=request.POST['content_idc'])
             new_comment = request.POST.get('new_comment')
             c = Comments()
             c.content_id = request.POST['content_idc']
@@ -105,6 +108,8 @@ def home(request):
             c.comment = new_comment
             c.save()
             comments = Comments.objects.all().filter(Q(user_id=request.user.id) & Q(content_id=request.POST['content_idc']))
+            return render(request=request, template_name="main/content_detail.html",
+                          context={"contents": content, "likes": likes, "comments": comments})
     return render(request=request, template_name="main/home.html", context={"contents": contents})
 
 
