@@ -8,15 +8,29 @@
     <h2>Content Special</h2>
 </div>
 <div style="width: 55%; margin-left:260px">
+    {% for content in contents.all %}
     <p> <a style="color:red">User : </a>{{ content.first_name}} {{ content.last_name}}</p>
     <p > <a style="color:red">Title : </a>{{ content.title }}</p>
     <p > <a style="color:red">Message : </a>{{ content.message }}</p>
     <p > <a style="color:red">Address : </a><a href="{{ content.address }}">{{ content.address }}</a></p>
     <p > <a style="color:red">Labels : </a>{{ content.labels }}</p>
-    <form action="{url 'like_content' contents.pk}" method="POST">
+    <p > <a style="color:blue">Liked : </a>{{ likes.all.count }}</p>
+
+    <form method="POST">
         {% csrf_token %}
+            <input style="width: 80%; height:30px; margin: 10px" type="text" name="new_comment" placeholder="Enter your comment"/><br/>
+            <input style="width: 80%; height:30px; margin: 10px" type="hidden" name="content_idc" value="{{content.id}}"/><br/>
             <button type="submit" name="content_like" value="{{content.id}}" class="btn btn-primary btn-sm">Like</button>
+            <input type="submit" value="Make Comment"/>
     </form>
+    <hr>
+    <br/><br/>
+    {% endfor %}
+    {% for comment in comments.all %}
+    <p> <a style="color:red">User : </a>{{ comment.first_name}} {{ comment.last_name}}</p>
+    <p > <a style="color:red">Comment : </a>{{ comment.comment }}</p>
+    <hr>
+    {% endfor %}
     <br/><br/>
     <a href="{% url 'home' %}" class="btn btn-secondary">Back</a>
 </div>

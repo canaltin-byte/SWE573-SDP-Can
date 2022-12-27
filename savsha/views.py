@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from savsha.forms import NewUserForm, EditUserProfileForm, PasswordChangingForm
-from savsha.models import Category, Contents, Friends
+from savsha.models import Category, Contents, Friends, Likes, Comments
 from django.urls import reverse_lazy, reverse
 from django.views import generic
 from django.contrib.auth import get_user_model
@@ -60,7 +60,6 @@ def logout_request(request):
 
 
 def home(request):
-    my_friends_ids = Friends.objects.all().filter(user_id=request.user.id).values_list('friend_ids', flat=True)
     contents = Contents.objects.all().order_by("-id")
     if request.method == 'POST':
         if request.POST.get('search'):
@@ -82,10 +81,32 @@ def home(request):
                 for l in range(len(my_friends_ids) - 1):
                     space = space | contents.filter(Q(user_id=my_friends_ids[l + 1]))
                 return render(request=request, template_name="main/home.html", context={"contents": space})
-        if request.POST.get('content_id'):
-            content_id = request.POST['content_id']
+        if request.POST.get('extend'):
+            content_id = request.POST['extend']
+            likes = Likes.objects.all().filter(content_id=content_id)
+            comments = Comments.objects.all().filter(content_id=content_id)
             content = contents.filter(id=content_id)
-            return render(request=request, template_name="main/content_detail.html", context={"content": content})
+            return render(request=request, template_name="main/content_detail.html", context={"contents": content, "likes": likes, "comments": comments})
+        if request.POST.get('content_like'):
+            liked_check = Likes.objects.all().filter(Q(user_id=request.user.id) & Q(content_id=request.POST['content_like']))
+            if not liked_check:
+                l = Likes()
+                l.content_id = request.POST['content_like']
+                l.user_id = request.user.id
+                l.save()
+            content = contents.filter(id=request.POST['content_like'])
+            likes = Likes.objects.all().filter(content_id=request.POST['content_like'])
+            return render(request=request, template_name="main/content_detail.html", context={"contents": content, "likes": likes})
+        if request.POST.get('new_comment'):
+            new_comment = request.POST.get('new_comment')
+            c = Comments()
+            c.content_id = request.POST['content_idc']
+            c.user_id = request.user.id
+            c.first_name = request.user.first_name
+            c.last_name = request.user.last_name
+            c.comment = new_comment
+            c.save()
+            comments = Comments.objects.all().filter(Q(user_id=request.user.id) & Q(content_id=request.POST['content_idc']))
     return render(request=request, template_name="main/home.html", context={"contents": contents})
 
 
@@ -185,6 +206,6 @@ def like_view(request, pk):
     return HttpResponseRedirect(reverse('content_detail', args=[str(pk)]))
 
 
-def content_view(request):
-    content = get_object_or_404(Contents, request.POST.get('content_id'))
-    return render(request=request, template_name="main/content_detail.html", context={"content": content})
+def content_view(request, pk):
+    content = get_object_or_404(Contents, request.POST.get('extend'))
+    return HttpResponseRedirect(reverse('content', args=[str(pk)]))
