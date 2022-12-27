@@ -6,6 +6,12 @@
     {% csrf_token %}
       {{ login_form|crispy }}
     <button style="margin:10px" class="btn btn-primary" type="submit">Login</button>
+    <button style="margin:10px" class="btn btn-primary" type="submit" value="forgot">Forgot password</button>
+  </form>
+  <form method="POST">
+    {% csrf_token %}
+    <input type="text" id="forgot" name="forgot" placeholder="Please enter your email address">
+    <button style="margin:10px" class="btn btn-primary" type="submit">Forgot password</button>
   </form>
   <p class="text-center">Don't have an account? <a href="/register">Create an account</a>.</p>
 </div>

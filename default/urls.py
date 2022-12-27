@@ -21,19 +21,15 @@ from savsha import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.first_page, name='list'),
-    path('test/', views.test, name='test'),
+    path('', views.first_page, name='first_page'),
     path("register/", views.register_request, name="register"),
     path("login/", views.login_request, name="login"),
     path("logout/", views.logout_request, name="logout"),
     path("home/", views.home, name="home"),
-    path("category/", views.category, name="category"),
     path("new_content/", views.new_content, name="new_content"),
     path("my_profile/", views.my_profile, name="my_profile"),
     path("change_password/", views.PasswordChangeView.as_view(template_name="user_page/password_change.html"), name="change_password"),
     path("password_success/", views.password_success, name="password_success"),
     path("edit_profile/", views.UpdateUserView.as_view(), name="edit_user"),
     path("connections/", views.connections, name="connections"),
-    path("like/<int:pk>", views.like_view, name="content_like"),
-    path("content/<int:pk>", views.content_view, name="content_id"),
 ]

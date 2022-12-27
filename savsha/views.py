@@ -5,12 +5,14 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from savsha.forms import NewUserForm, EditUserProfileForm, PasswordChangingForm
-from savsha.models import Category, Contents, Friends, Likes, Comments
+from savsha.models import Category, Contents, Friends, Likes, Comments, ExtendedUser
 from django.urls import reverse_lazy, reverse
 from django.views import generic
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from django.http import HttpResponseRedirect
+from django.core.mail import send_mail
+
 
 def first_page(request):
     return render(request, 'main/first_page.html')
@@ -132,20 +134,21 @@ def new_content(request):
 
 
 def my_profile(request):
-    return render(request=request, template_name="user_page/my_profile.html", context={"user": request.user})
-
-
-def category(request):
-    categories = Category.objects
+    summary = ExtendedUser.objects.all().filter(user_id=request.user.id)
     if request.method == 'POST':
-        if request.POST.get('user') and request.POST.get('category'):
-            c = Category()
-            c.user_id = request.POST.get('user')
-            c.category_names = request.POST.get('category')
-            c.save()
-            return render(request=request, template_name="user_page/category.html", context={"categories": categories})
-    else:
-        return render(request=request, template_name="user_page/category.html", context={"categories": categories})
+        if request.POST.get('summary'):
+            if not summary:
+                e = ExtendedUser()
+                e.user_id = request.user.id
+                e.summary = request.POST.get('summary')
+                e.save()
+                return render(request=request, template_name="user_page/my_profile.html",
+                              context={"user": request.user, "summary": summary})
+            else:
+                ExtendedUser.objects.filter(user_id=request.user.id).update(summary=request.POST.get('summary'))
+                return render(request=request, template_name="user_page/my_profile.html",
+                              context={"user": request.user, "summary": summary})
+    return render(request=request, template_name="user_page/my_profile.html", context={"user": request.user, "summary": summary})
 
 
 class PasswordChangeView(PasswordChangeView):
@@ -198,14 +201,3 @@ def connections(request):
             member = Friends.objects.all().filter(Q(user_id=user_id) & Q(friend_ids=f_id))
             member.delete()
     return render(request=request, template_name="user_page/connections.html", context={"all_users": friend_list})
-
-
-def like_view(request, pk):
-    content = get_object_or_404(Contents, request.POST.get('content_id'))
-    content.likes.add(request.user)
-    return HttpResponseRedirect(reverse('content_detail', args=[str(pk)]))
-
-
-def content_view(request, pk):
-    content = get_object_or_404(Contents, request.POST.get('extend'))
-    return HttpResponseRedirect(reverse('content', args=[str(pk)]))

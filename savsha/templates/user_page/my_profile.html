@@ -8,6 +8,14 @@
     <p > <a style="color:red">E-mail : </a>{{ user.email }}</p>
     <p > <a style="color:red">Name : </a>{{ user.first_name }}</p>
     <p > <a style="color:red">Surname : </a>{{ user.last_name }}</p>
+    {% for summary in summary.all %}
+    <p > <a style="color:red">About Me : </a>{{ summary.summary }}</p>
+    {% endfor %}
+    <form method="POST">
+        {% csrf_token %}
+        <input style="width: 80%; height:30px;" type="text" id="summary" name="summary">
+        <button style="margin:10px" class="btn btn-primary"  type="submit">Update Your Summary</button>
+    </form>
     <button class="btn btn-primary" onclick="window.location.pathname='edit_profile'">Edit Profile
     </button>
     <button class="btn btn-primary" onclick="window.location.pathname='change_password'">Change Password
