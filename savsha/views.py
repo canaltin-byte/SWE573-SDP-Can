@@ -59,7 +59,7 @@ def logout_request(request):
 
 
 def home(request):
-    contents = Contents.objects.all().order_by("-id")
+    contents = Contents.objects.all().order_by("-id").filter(private=False)
     if request.method == 'POST':
         if request.POST.get('search'):
             searched_text = request.POST.get('search')
@@ -71,7 +71,7 @@ def home(request):
             if method == 'all':
                 return render(request=request, template_name="main/home.html", context={"contents": contents})
             if method == 'saving':
-                savings = contents.filter(Q(user_id=request.user.id))
+                savings = Contents.objects.all().order_by("-id").filter(Q(user_id=request.user.id))
                 return render(request=request, template_name="main/home.html", context={"contents": savings})
             if method == 'space':
                 my_friends_ids = Friends.objects.all().filter(user_id=request.user.id).values_list('friend_ids',
@@ -121,6 +121,9 @@ def new_content(request):
             c.message = request.POST.get('message')
             c.address = request.POST.get('address')
             c.labels = request.POST.get('labels')
+            c.origin = request.POST.get('origin')
+            if request.POST.get('privacy'):
+                c.private = True
             c.save()
             return render(request=request, template_name="main/home.html")
         else:
