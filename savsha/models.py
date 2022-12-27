@@ -32,6 +32,8 @@ class Contents(models.Model):
     message = models.CharField(max_length=1000)
     address = models.CharField(max_length=1000)
     labels = models.CharField(max_length=1000)
+    private = models.BooleanField(default=False, null=True)
+    origin = models.CharField(max_length=1000, default='unknown', null=False)
 
 
 class Likes(models.Model):
