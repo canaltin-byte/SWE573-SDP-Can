@@ -8,11 +8,11 @@ services:
       - ".:/savsha"
       - ".data/root:/root"
     depends_on:
-      - localhost
+      - db
     ports:
-      - "80:8000"
+      - "8000:8000"
 
-  localhost:
+  db:
     image: postgres:13.6
     environment:
       - POSTGRES_DB=postgres
